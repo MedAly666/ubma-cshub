@@ -5,32 +5,34 @@ import type {
   DeleteSemesterRes,
   UpdateSemesterRes,
   CreateSemesterRes,
+  ErrorRes,
 } from "@/types/services";
 
 export async function getSemesters() {
   const res = await fetch(`${API_BASE}/api/v1/semesters`);
+  if (!res.ok) {
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
+  }
   const resData: GetSemestersRes = await res.json();
   return resData.semesters;
 }
 
 export async function createSemesterReq(token: string, data: CreateSemester) {
-  try {
-    const res = await fetch(`${API_BASE}/api/v1/semesters`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) {
-      throw new Error(res.statusText);
-    }
-    const resData: CreateSemesterRes = await res.json();
-    return resData.semester;
-  } catch (error) {
-    throw error;
+  const res = await fetch(`${API_BASE}/api/v1/semesters`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
   }
+  const resData: CreateSemesterRes = await res.json();
+  return resData.semester;
 }
 
 export async function deleteSemesterReq(token: string, semesterId: string) {
@@ -38,6 +40,10 @@ export async function deleteSemesterReq(token: string, semesterId: string) {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
   });
+  if (!res.ok) {
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
+  }
   const resData: DeleteSemesterRes = await res.json();
   return resData.deletedSemester;
 }
@@ -55,6 +61,10 @@ export async function updateSemesterReq(
       "Content-Type": "application/json",
     },
   });
+  if (!res.ok) {
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
+  }
   const resData: UpdateSemesterRes = await res.json();
   return resData.semester;
 }

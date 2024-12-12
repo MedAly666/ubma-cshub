@@ -5,32 +5,34 @@ import type {
   UpdateMajorRes,
   CreateMajorRes,
   DeleteMajorRes,
+  ErrorRes,
 } from "@/types/services";
 
 export async function getMajors() {
   const res = await fetch(`${API_BASE}/api/v1/majors`);
+  if (!res.ok) {
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
+  }
   const resData: GetMajorsRes = await res.json();
   return resData.majors;
 }
 
 export async function createMajorReq(token: string, data: CreateMajor) {
-  try {
-    const res = await fetch(`${API_BASE}/api/v1/majors`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) {
-      throw new Error(res.statusText);
-    }
-    const resData: CreateMajorRes = await res.json();
-    return resData.major;
-  } catch (error) {
-    throw error;
+  const res = await fetch(`${API_BASE}/api/v1/majors`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
   }
+  const resData: CreateMajorRes = await res.json();
+  return resData.major;
 }
 
 export async function deleteMajorReq(token: string, degreeId: string) {
@@ -38,6 +40,10 @@ export async function deleteMajorReq(token: string, degreeId: string) {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
   });
+  if (!res.ok) {
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
+  }
   const resData: DeleteMajorRes = await res.json();
   return resData.deletedMajor;
 }
@@ -56,9 +62,9 @@ export async function updateMajorReq(
     },
   });
   if (!res.ok) {
-    throw new Error(res.statusText);
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
   }
-
   const resData: UpdateMajorRes = await res.json();
   return resData.major;
 }

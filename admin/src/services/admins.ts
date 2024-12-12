@@ -12,40 +12,33 @@ import type {
 export async function getAdmins() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value as string;
-  try {
-    const res = await fetch(`${API_BASE}/api/v1/admins`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!res.ok) {
-      const errorData: ErrorRes = await res.json();
-      throw new Error(errorData.message);
-    }
-    const data: { admins: User[] } = await res.json();
-    return data.admins;
-  } catch (error) {
-    throw error;
+
+  const res = await fetch(`${API_BASE}/api/v1/admins`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) {
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
   }
+  const data: { admins: User[] } = await res.json();
+  return data.admins;
 }
 
 export async function createAdminReq(token: string, data: CreateAdmin) {
-  try {
-    const res = await fetch(`${API_BASE}/api/v1/admins`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) {
-      throw new Error(res.statusText);
-    }
-    const resData: CreateAdminRes = await res.json();
-    return resData.admin;
-  } catch (error) {
-    throw error;
+  const res = await fetch(`${API_BASE}/api/v1/admins`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
   }
+  const resData: CreateAdminRes = await res.json();
+  return resData.admin;
 }
 
 export async function deleteAdminReq(id: string, token: string) {
@@ -70,6 +63,10 @@ export async function updateAdminReq(
       "Content-Type": "application/json",
     },
   });
+  if (!res.ok) {
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
+  }
   const resData: UpdateAdminRes = await res.json();
   return resData.admin;
 }

@@ -76,3 +76,12 @@ export type DeleteModuleRes = {
 export type GetModulesRes = {
   modules: Module[];
 };
+
+// AUTH
+export type LoginRes = {
+  token: string;
+};
+
+export type VerifyTokenRes = {
+  valid: boolean;
+};

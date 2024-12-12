@@ -5,32 +5,34 @@ import type {
   CreateDegreeRes,
   UpdateDegreeRes,
   DeleteDegreeRes,
+  ErrorRes,
 } from "@/types/services";
 
 export async function getDegrees() {
   const res = await fetch(`${API_BASE}/api/v1/degrees`);
+  if (!res.ok) {
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
+  }
   const resData: GetDegreesRes = await res.json();
   return resData.degrees;
 }
 
 export async function createDegreeReq(token: string, data: CreateDegree) {
-  try {
-    const res = await fetch(`${API_BASE}/api/v1/degrees`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) {
-      throw new Error(res.statusText);
-    }
-    const resData: CreateDegreeRes = await res.json();
-    return resData.degree;
-  } catch (error) {
-    throw error;
+  const res = await fetch(`${API_BASE}/api/v1/degrees`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
   }
+  const resData: CreateDegreeRes = await res.json();
+  return resData.degree;
 }
 
 export async function deleteDegreeReq(token: string, degreeId: string) {
@@ -38,6 +40,10 @@ export async function deleteDegreeReq(token: string, degreeId: string) {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
   });
+  if (!res.ok) {
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
+  }
   const resData: DeleteDegreeRes = await res.json();
   return resData.deletedDegree;
 }
@@ -55,6 +61,10 @@ export async function updateDegreeReq(
       "Content-Type": "application/json",
     },
   });
+  if (!res.ok) {
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
+  }
   const resData: UpdateDegreeRes = await res.json();
   return resData.degree;
 }

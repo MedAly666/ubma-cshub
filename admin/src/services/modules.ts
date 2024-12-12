@@ -5,27 +5,24 @@ import {
   CreateModuleRes,
   UpdateModuleRes,
   DeleteModuleRes,
+  ErrorRes,
 } from "@/types/services";
 
 export async function createModuleReq(token: string, data: CreateModule) {
-  try {
-    const res = await fetch(`${API_BASE}/api/v1/modules`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) {
-      throw new Error(res.statusText);
-    }
-    const resData: CreateModuleRes = await res.json();
-
-    return resData.module;
-  } catch (error) {
-    throw error;
+  const res = await fetch(`${API_BASE}/api/v1/modules`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
   }
+  const resData: CreateModuleRes = await res.json();
+  return resData.module;
 }
 
 export async function updateModuleReq(
@@ -41,6 +38,10 @@ export async function updateModuleReq(
       "Content-Type": "application/json",
     },
   });
+  if (!res.ok) {
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
+  }
   const resData: UpdateModuleRes = await res.json();
   return resData.module;
 }
@@ -52,12 +53,20 @@ export async function deleteModuleReq(moduleId: string, token: string) {
       Authorization: `Bearer ${token}`,
     },
   });
+  if (!res.ok) {
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
+  }
   const resData: DeleteModuleRes = await res.json();
   return resData.deletedModule;
 }
 
 export async function getModules() {
   const res = await fetch(`${API_BASE}/api/v1/modules`);
+  if (!res.ok) {
+    const errData: ErrorRes = await res.json();
+    throw new Error(errData.message);
+  }
   const resData: GetModulesRes = await res.json();
   return resData.modules;
 }

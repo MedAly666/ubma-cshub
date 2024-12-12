@@ -12,7 +12,6 @@ export async function fetchWithAuth<T>(endpoint: string, model: string) {
     const res = await fetch(url, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
-      cache: "force-cache",
       next: { tags: [model] },
     });
     if (!res.ok) {
