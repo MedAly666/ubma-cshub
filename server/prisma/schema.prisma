@@ -17,6 +17,7 @@ datasource db {
 enum UserRole {
   STUDENT
   ADMIN
+  SUPERUSER
 }
 
 model User {
@@ -39,7 +40,19 @@ model Degree {
   name      DegreeType
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  years     Year[]
+  Major     Major[]
+}
+
+model Major {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  code        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  degree      Degree?  @relation(fields: [degreeId], references: [id], onDelete: Cascade)
+  degreeId    String?
+  years       Year[]
 }
 
 model Year {
@@ -47,9 +60,9 @@ model Year {
   yearNumber Int
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
-  degree     Degree?    @relation(fields: [degreeId], references: [id])
-  degreeId   String?
   semesters  Semester[]
+  major      Major?     @relation(fields: [majorId], references: [id])
+  majorId    String?
 }
 
 model Semester {
@@ -57,7 +70,7 @@ model Semester {
   semesterNumber Int
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-  year           Year?    @relation(fields: [yearId], references: [id])
+  year           Year?    @relation(fields: [yearId], references: [id], onDelete: Cascade)
   yearId         String?
   modules        Module[]
 }
@@ -69,7 +82,7 @@ model Module {
   description String
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
-  Semester    Semester?  @relation(fields: [semesterId], references: [id])
+  semester    Semester?  @relation(fields: [semesterId], references: [id], onDelete: Cascade)
   semesterId  String?
   resources   Resource[]
 }
@@ -87,6 +100,6 @@ model Resource {
   description  String
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
-  Module       Module?      @relation(fields: [moduleId], references: [id])
+  Module       Module?      @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   moduleId     String?
 }

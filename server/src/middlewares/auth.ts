@@ -18,8 +18,8 @@ export const isAdmin = async (
     if (!user) {
       throw new Error("Access Denied, user not found");
     }
-    if (user.role != "ADMIN") {
-      throw new Error("Access Denied, user not admin");
+    if (user.role != "ADMIN" && user.role != "SUPERUSER") {
+      throw new Error("Access Denied, user not admin or super user");
     }
     req.user = user;
     next();

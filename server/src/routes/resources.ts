@@ -6,13 +6,14 @@ import {
   getResources,
   updateResource,
 } from "../handlers/resources";
+import { isAdmin } from "../middlewares/auth";
 
 const resourcesRouter = Router();
 
-resourcesRouter.post("/", createResource);
+resourcesRouter.post("/", isAdmin, createResource);
 resourcesRouter.get("/:id", getResource);
-resourcesRouter.delete("/:id", deleteResource);
-resourcesRouter.put("/:id", updateResource);
+resourcesRouter.delete("/:id", isAdmin, deleteResource);
+resourcesRouter.put("/:id", isAdmin, updateResource);
 resourcesRouter.get("/", getResources);
 
 export default resourcesRouter;

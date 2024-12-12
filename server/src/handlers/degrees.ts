@@ -8,6 +8,7 @@ import {
 } from "../services/degrees";
 import { asyncWrapper } from "../middlewares/async";
 import { StatusCodes } from "http-status-codes";
+import { NotFoundError } from "../errors/errors";
 
 interface CreateDegreeRequestBody {
   name: "MASTERS" | "BACHELOR";
@@ -34,6 +35,9 @@ export const getDegree = asyncWrapper(
   ) => {
     const { id } = req.params;
     const degree = await findDegreeByID(id);
+    if (!degree) {
+      return next(new NotFoundError("Degree not found"));
+    }
     res.status(StatusCodes.OK).json({ degree });
   }
 );
@@ -56,6 +60,10 @@ export const deleteDegree = asyncWrapper(
     next: NextFunction
   ) => {
     const { id } = req.params;
+    const degree = await findDegreeByID(id);
+    if (!degree) {
+      return next(new NotFoundError("Degree not found"));
+    }
     const deletedDegree = await removeDegree(id);
     res.status(StatusCodes.OK).json({ deletedDegree });
   }
@@ -73,9 +81,14 @@ export const updateDegree = asyncWrapper(
     const { name } = req.body;
     const { id } = req.params;
 
-    const degree = await editDegree(id, {
+    const degree = await findDegreeByID(id);
+    if (!degree) {
+      return next(new NotFoundError("Degree not found"));
+    }
+
+    const updatedDegree = await editDegree(id, {
       name,
     });
-    res.status(StatusCodes.OK).json({ degree });
+    res.status(StatusCodes.OK).json({ degree: updatedDegree });
   }
 );

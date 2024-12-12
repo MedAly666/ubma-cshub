@@ -7,13 +7,14 @@ import {
 } from "../handlers/degrees";
 
 import { Router } from "express";
+import { isAdmin } from "../middlewares/auth";
 
 const degreesRouter = Router();
 
 degreesRouter.get("/", getDegrees);
-degreesRouter.post("/", createDegree);
-degreesRouter.delete("/:id", deleteDegree);
-degreesRouter.put("/:id", updateDegree);
+degreesRouter.post("/", isAdmin, createDegree);
+degreesRouter.delete("/:id", isAdmin, deleteDegree);
+degreesRouter.put("/:id", isAdmin, updateDegree);
 degreesRouter.get("/:id", getDegree);
 
 export default degreesRouter;

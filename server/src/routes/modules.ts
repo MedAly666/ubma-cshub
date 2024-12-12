@@ -6,13 +6,14 @@ import {
   getModules,
   updateModule,
 } from "../handlers/modules";
+import { isAdmin } from "../middlewares/auth";
 
 const modulesRouter = Router();
 
 modulesRouter.get("/:id", getModule);
-modulesRouter.post("/", createModule);
-modulesRouter.delete("/:id", deleteModule);
+modulesRouter.post("/", isAdmin, createModule);
+modulesRouter.delete("/:id", isAdmin, deleteModule);
 modulesRouter.get("/", getModules);
-modulesRouter.put("/:id", updateModule);
+modulesRouter.put("/:id", isAdmin, updateModule);
 
 export default modulesRouter;

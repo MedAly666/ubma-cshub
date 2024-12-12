@@ -10,7 +10,12 @@ export const findSemesterByID = async (id: string) => {
   return semester;
 };
 export const findSemesters = async () => {
-  const semesters = await prisma.semester.findMany({});
+  const semesters = await prisma.semester.findMany({
+    include: { year: { include: { major: { include: { degree: true } } } } },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
   return semesters;
 };
 export const removeSemester = async (id: string) => {

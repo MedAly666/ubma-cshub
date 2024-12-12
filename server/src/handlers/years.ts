@@ -8,6 +8,8 @@ import {
   removeYear,
 } from "../services/years";
 import { StatusCodes } from "http-status-codes";
+import { NotFoundError } from "../errors/errors";
+import { CreateYear, UpdateYear } from "../dtos/years";
 
 export const getYear = asyncWrapper(
   async (
@@ -17,22 +19,22 @@ export const getYear = asyncWrapper(
   ) => {
     const { id } = req.params;
     const year = await findYearByID(id);
+    if (!year) {
+      return next(new NotFoundError("Year not found"));
+    }
     res.status(StatusCodes.OK).json({ year });
   }
 );
 
-interface CreateYearRequestBody {
-  yearNumber: number;
-  degreeId: string;
-}
+interface CreateYearRequestBody extends CreateYear {}
 export const createYear = asyncWrapper(
   async (
     req: Request<{}, {}, CreateYearRequestBody>,
     res: Response,
     next: NextFunction
   ) => {
-    const { yearNumber, degreeId } = req.body;
-    const year = await addYear({ yearNumber, degreeId });
+    const { yearNumber, majorId } = req.body;
+    const year = await addYear({ yearNumber, majorId });
     res.status(StatusCodes.CREATED).json({ year });
   }
 );
@@ -49,24 +51,28 @@ export const deleteYear = asyncWrapper(
     next: NextFunction
   ) => {
     const { id } = req.params;
+    const year = await findYearByID(id);
+    if (!year) {
+      return next(new NotFoundError("Year not found"));
+    }
     const deletedYear = await removeYear(id);
     res.status(StatusCodes.OK).json({ deletedYear });
   }
 );
 
-interface UpdateYearRequestBody {
-  yearNumber?: number;
-  degreeId?: string;
-}
+interface UpdateYearRequestBody extends UpdateYear {}
 export const updateYear = asyncWrapper(
   async (
     req: Request<{ id: string }, UpdateYearRequestBody>,
     res: Response,
     next: NextFunction
   ) => {
-    const { yearNumber, degreeId } = req.body;
     const { id } = req.params;
-    const year = await editYear(id, { yearNumber, degreeId });
-    res.status(StatusCodes.OK).json({ year });
+    const year = await findYearByID(id);
+    if (!year) {
+      return next(new NotFoundError("Year not found"));
+    }
+    const updatedYear = await editYear(id, req.body);
+    res.status(StatusCodes.OK).json({ year: updatedYear });
   }
 );

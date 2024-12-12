@@ -9,7 +9,7 @@ declare global {
         email: string;
         createdAt: Date;
         updatedAt: Date;
-        role: "ADMIN" | "STUDENT";
+        role: "ADMIN" | "STUDENT" | "SUPERUSER";
       };
     }
   }

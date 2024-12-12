@@ -6,13 +6,14 @@ import {
   getAdmins,
   updateAdmin,
 } from "../handlers/admins";
+import { isAdmin } from "../middlewares/auth";
 
 const adminsRouter = Router();
 
-adminsRouter.post("/", createAdmin);
-adminsRouter.get("/:id", getAdmin);
-adminsRouter.get("/", getAdmins);
-adminsRouter.put("/:id", updateAdmin);
-adminsRouter.delete("/:id", deleteAdmin);
+adminsRouter.post("/", isAdmin, createAdmin);
+adminsRouter.get("/:id", isAdmin, getAdmin);
+adminsRouter.get("/", isAdmin, getAdmins);
+adminsRouter.put("/:id", isAdmin, updateAdmin);
+adminsRouter.delete("/:id", isAdmin, deleteAdmin);
 
 export default adminsRouter;

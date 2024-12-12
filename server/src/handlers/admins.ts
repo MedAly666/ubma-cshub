@@ -4,6 +4,7 @@ import { findAdmins } from "../services/admins";
 import { asyncWrapper } from "../middlewares/async";
 import { StatusCodes } from "http-status-codes";
 import { hashPassword } from "../utils/password";
+import { NotFoundError } from "../errors/errors";
 
 interface CreateAdminRequestBody {
   username: string;
@@ -17,7 +18,9 @@ export const createAdmin = asyncWrapper(
     next: NextFunction
   ) => {
     const { username, email, password } = req.body;
+
     const hashedPassword = await hashPassword(password);
+
     const user = await addUser({
       username,
       email,
@@ -35,8 +38,11 @@ export const getAdmin = asyncWrapper(
     next: NextFunction
   ) => {
     const { id } = req.params;
-    const user = await findUserByID(id);
-    res.status(StatusCodes.OK).json({ user });
+    const admin = await findUserByID(id);
+    if (!admin) {
+      return next(new NotFoundError("Admin not found"));
+    }
+    res.status(StatusCodes.OK).json({ admin });
   }
 );
 
@@ -58,15 +64,18 @@ export const deleteAdmin = asyncWrapper(
     next: NextFunction
   ) => {
     const { id } = req.params;
+    const admin = await findUserByID(id);
+    if (!admin) {
+      return next(new NotFoundError("Admin not found"));
+    }
     const deletedAdmin = await removeUser(id);
     res.status(StatusCodes.OK).json({ deletedAdmin });
   }
 );
 
 interface UpdateAdminRequestBody {
-  username: string;
-  email: string;
-  password: string;
+  username?: string;
+  email?: string;
 }
 export const updateAdmin = asyncWrapper(
   async (
@@ -74,13 +83,11 @@ export const updateAdmin = asyncWrapper(
     res: Response,
     next: NextFunction
   ) => {
-    const { email, username, password } = req.body;
+    const { email, username } = req.body;
     const { id } = req.params;
-    const hashedPassword = await hashPassword(password);
     const admin = await editUser(id, {
       email,
       username,
-      password: hashedPassword,
       role: "ADMIN",
     });
     res.status(StatusCodes.OK).json({ admin });
