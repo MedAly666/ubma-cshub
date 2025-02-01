@@ -18,7 +18,7 @@ export default function Hero() {
             </TypographyP>
             <TypographyP>Created and maintained by students</TypographyP>
           </div>
-          <Button className="cursor-pointer" size={"lg"}>
+          <Button className="cursor-pointer font-semibold" size={"lg"}>
             Explore courses
           </Button>
         </div>

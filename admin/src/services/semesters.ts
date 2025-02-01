@@ -1,70 +1,34 @@
-import { CreateSemester, UpdateSemester } from "@/dtos/semesters";
-import { API_BASE } from "@/constants";
-import type {
-  GetSemestersRes,
-  DeleteSemesterRes,
-  UpdateSemesterRes,
-  CreateSemesterRes,
-  ErrorRes,
-} from "@/types/services";
+import { CreateSemester, UpdateSemester } from "../dtos/semesters";
+import { prisma } from "@/utils/db";
 
-export async function getSemesters() {
-  const res = await fetch(`${API_BASE}/api/v1/semesters`);
-  if (!res.ok) {
-    const errData: ErrorRes = await res.json();
-    throw new Error(errData.message);
-  }
-  const resData: GetSemestersRes = await res.json();
-  return resData.semesters;
-}
-
-export async function createSemesterReq(token: string, data: CreateSemester) {
-  const res = await fetch(`${API_BASE}/api/v1/semesters`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) {
-    const errData: ErrorRes = await res.json();
-    throw new Error(errData.message);
-  }
-  const resData: CreateSemesterRes = await res.json();
-  return resData.semester;
-}
-
-export async function deleteSemesterReq(token: string, semesterId: string) {
-  const res = await fetch(`${API_BASE}/api/v1/semesters/${semesterId}`, {
-    method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (!res.ok) {
-    const errData: ErrorRes = await res.json();
-    throw new Error(errData.message);
-  }
-  const resData: DeleteSemesterRes = await res.json();
-  return resData.deletedSemester;
-}
-
-export async function updateSemesterReq(
-  token: string,
-  semesterId: string,
-  data: UpdateSemester
-) {
-  const res = await fetch(`${API_BASE}/api/v1/semesters/${semesterId}`, {
-    method: "PUT",
-    body: JSON.stringify(data),
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
+export const addSemester = async (semesterInfo: CreateSemester) => {
+  const semester = await prisma.semester.create({ data: semesterInfo });
+  return semester;
+};
+export const findSemesterByID = async (id: string) => {
+  const semester = await prisma.semester.findUnique({ where: { id } });
+  return semester;
+};
+export const findSemesters = async () => {
+  const semesters = await prisma.semester.findMany({
+    include: { year: { include: { major: { include: { degree: true } } } } },
+    orderBy: {
+      createdAt: "asc",
     },
   });
-  if (!res.ok) {
-    const errData: ErrorRes = await res.json();
-    throw new Error(errData.message);
-  }
-  const resData: UpdateSemesterRes = await res.json();
-  return resData.semester;
-}
+  return semesters;
+};
+export const removeSemester = async (id: string) => {
+  const deletedSemester = await prisma.semester.delete({ where: { id } });
+  return deletedSemester;
+};
+export const editSemester = async (
+  id: string,
+  semesterInfo: UpdateSemester
+) => {
+  const semester = await prisma.semester.update({
+    where: { id },
+    data: semesterInfo,
+  });
+  return semester;
+};

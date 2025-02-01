@@ -1,16 +1,16 @@
 import TypographyH3 from "@/components/typography/h3";
 import CreateSemesterDialog from "./components/create-dialog";
-import { getYears } from "@/services/years";
-import { getDegrees } from "@/services/degrees";
-import { getSemesters } from "@/services/semesters";
-import { getMajors } from "@/services/majors";
+import { findYears } from "@/services/years";
+import { findDegrees } from "@/services/degrees";
+import { findSemesters } from "@/services/semesters";
+import { findMajors } from "@/services/majors";
 import SemestersTable from "./components/semesters-table";
 
 export default async function Semesters() {
-  const yearsReq = getYears();
-  const degreesReq = getDegrees();
-  const semestersReq = getSemesters();
-  const majorsReq = getMajors();
+  const yearsReq = findYears();
+  const degreesReq = findDegrees();
+  const semestersReq = findSemesters();
+  const majorsReq = findMajors();
 
   const [years, degrees, semesters, majors] = await Promise.all([
     yearsReq,

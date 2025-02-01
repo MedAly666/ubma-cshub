@@ -1,10 +1,5 @@
 export interface CreateAdmin {
-  username: string;
   email: string;
+  username: string;
   password: string;
-}
-
-export interface UpdateAdmin {
-  username?: string;
-  email?: string;
 }

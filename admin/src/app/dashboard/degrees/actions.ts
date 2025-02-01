@@ -1,12 +1,7 @@
 "use server";
 
-import {
-  createDegreeReq,
-  deleteDegreeReq,
-  updateDegreeReq,
-} from "@/services/degrees";
+import { addDegree, removeDegree, editDegree } from "@/services/degrees";
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
 import { z } from "zod";
 
 interface DeleteDegreeState {
@@ -18,11 +13,9 @@ export async function deleteDegree(
   data: FormData
 ) {
   const degreeId = data.get("degreeId")?.toString() as string;
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value as string;
 
   try {
-    await deleteDegreeReq(token, degreeId);
+    await removeDegree(degreeId);
   } catch (error) {
     console.log(error);
     return {
@@ -66,15 +59,14 @@ export async function updateDegree(
     };
   }
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value as string;
   try {
-    await updateDegreeReq(token, degreeId, result.data);
+    await editDegree(degreeId, result.data);
   } catch (error) {
     console.log(error);
     return {
       success: false,
-      serverErrors: "failed to update degree, please try again later",
+      serverErrors:
+        "An error occured while updating degree, please try again later",
     };
   }
   revalidatePath("/dashboard/degrees");
@@ -110,16 +102,14 @@ export async function createDegree(
     };
   }
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value as string;
-
   try {
-    await createDegreeReq(token, result.data);
+    await addDegree(result.data);
   } catch (error) {
     console.log(error);
     return {
       success: false,
-      serverErrors: "failed to create degree, please try again later",
+      serverErrors:
+        "An error occured while creating degree, please try again later",
     };
   }
   revalidatePath("/dashboard/degrees");

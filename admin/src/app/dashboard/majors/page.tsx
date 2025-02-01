@@ -1,12 +1,12 @@
 import TypographyH3 from "@/components/typography/h3";
-import { getMajors } from "@/services/majors";
+import { findMajors } from "@/services/majors";
 import CreateMajorDialog from "./components/create-dialog";
-import { getDegrees } from "@/services/degrees";
+import { findDegrees } from "@/services/degrees";
 import MajorsTable from "./components/majors-table";
 
 export default async function Semesters() {
-  const majorsReq = getMajors();
-  const degreesReq = getDegrees();
+  const majorsReq = findMajors();
+  const degreesReq = findDegrees();
   const [majors, degrees] = await Promise.all([majorsReq, degreesReq]);
 
   return (

@@ -1,17 +1,12 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import Navbar from "./components/nav-bar";
+import TypographyH2 from "@/components/typography/h2";
+import { LoginCard } from "./components/login-card";
 
 export default function Home() {
   return (
-    <div className="container mx-auto px-8">
-      <Navbar />
-      <div className="min-h-[80vh] flex items-center justify-center">
-        <Link href={"/auth/login"}>
-          <Button size={"lg"} variant={"outline"} className="font-semibold">
-            Login
-          </Button>
-        </Link>
+    <div className="h-screen flex items-center justify-center">
+      <div className=" space-y-5">
+        <TypographyH2>CS-HUB Admin</TypographyH2>
+        <LoginCard />
       </div>
     </div>
   );

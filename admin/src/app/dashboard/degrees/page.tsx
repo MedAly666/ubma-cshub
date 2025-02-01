@@ -1,11 +1,11 @@
 import TypographyH3 from "@/components/typography/h3";
-import { getDegrees } from "@/services/degrees";
+import { findDegrees } from "@/services/degrees";
 
 import CreateDegreeDialog from "./components/create-dialog";
 import DegreesTable from "./components/degrees-table";
 
 export default async function Degrees() {
-  const degrees = await getDegrees();
+  const degrees = await findDegrees();
   return (
     <div>
       <div className="mb-4 flex justify-between">

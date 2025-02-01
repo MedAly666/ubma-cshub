@@ -1,6 +1,9 @@
-export type CreateSemester = {
+export interface CreateSemester {
   semesterNumber: number;
   yearId: string;
-};
+}
 
-export type UpdateSemester = Partial<CreateSemester>;
+export interface UpdateSemester {
+  semesterNumber?: number;
+  yearId?: string;
+}

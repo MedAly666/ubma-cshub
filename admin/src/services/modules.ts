@@ -1,72 +1,45 @@
-import { CreateModule, UpdateModule } from "@/dtos/modules";
-import { API_BASE } from "@/constants";
-import {
-  GetModulesRes,
-  CreateModuleRes,
-  UpdateModuleRes,
-  DeleteModuleRes,
-  ErrorRes,
-} from "@/types/services";
+import { CreateModule, UpdateModule } from "../dtos/modules";
+import { prisma } from "@/utils/db";
 
-export async function createModuleReq(token: string, data: CreateModule) {
-  const res = await fetch(`${API_BASE}/api/v1/modules`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
+export const addModule = async (moduleInfo: CreateModule) => {
+  const module_ = await prisma.module.create({
+    data: moduleInfo,
+    include: { semester: true },
   });
-  if (!res.ok) {
-    const errData: ErrorRes = await res.json();
-    throw new Error(errData.message);
-  }
-  const resData: CreateModuleRes = await res.json();
-  return resData.module;
-}
+  return module_;
+};
 
-export async function updateModuleReq(
-  moduleId: string,
-  token: string,
-  data: UpdateModule
-) {
-  const res = await fetch(`${API_BASE}/api/v1/modules/${moduleId}`, {
-    method: "PUT",
-    body: JSON.stringify(data),
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
+export const findModuleById = async (id: string) => {
+  const module_ = await prisma.module.findUnique({
+    where: { id },
+    include: { semester: { include: { year: true } } },
+  });
+  return module_;
+};
+export const findModules = async () => {
+  const modules = await prisma.module.findMany({
+    include: {
+      semester: {
+        include: {
+          year: { include: { major: { include: { degree: true } } } },
+        },
+      },
     },
   });
-  if (!res.ok) {
-    const errData: ErrorRes = await res.json();
-    throw new Error(errData.message);
-  }
-  const resData: UpdateModuleRes = await res.json();
-  return resData.module;
-}
+  return modules;
+};
+export const removeModule = async (id: string) => {
+  const deletedModule = await prisma.module.delete({ where: { id } });
+  return deletedModule;
+};
 
-export async function deleteModuleReq(moduleId: string, token: string) {
-  const res = await fetch(`${API_BASE}/api/v1/modules/${moduleId}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`,
+export const editModule = async (id: string, moduleInfo: UpdateModule) => {
+  const module_ = await prisma.module.update({
+    where: { id },
+    data: moduleInfo,
+    include: {
+      semester: true,
     },
   });
-  if (!res.ok) {
-    const errData: ErrorRes = await res.json();
-    throw new Error(errData.message);
-  }
-  const resData: DeleteModuleRes = await res.json();
-  return resData.deletedModule;
-}
-
-export async function getModules() {
-  const res = await fetch(`${API_BASE}/api/v1/modules`);
-  if (!res.ok) {
-    const errData: ErrorRes = await res.json();
-    throw new Error(errData.message);
-  }
-  const resData: GetModulesRes = await res.json();
-  return resData.modules;
-}
+  return module_;
+};

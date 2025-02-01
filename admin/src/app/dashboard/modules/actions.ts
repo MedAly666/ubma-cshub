@@ -1,12 +1,7 @@
 "use server";
 
-import {
-  createModuleReq,
-  deleteModuleReq,
-  updateModuleReq,
-} from "@/services/modules";
+import { addModule, removeModule, editModule } from "@/services/modules";
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
 import { z } from "zod";
 
 interface CreateModuleState {
@@ -43,11 +38,8 @@ export async function createModule(
     };
   }
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value as string;
-
   try {
-    await createModuleReq(token, result.data);
+    await addModule(result.data);
   } catch (error) {
     console.log(error);
     return {
@@ -73,10 +65,8 @@ export async function deleteModule(
   data: FormData
 ) {
   const moduleId = data.get("moduleId")?.toString() as string;
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value as string;
   try {
-    await deleteModuleReq(moduleId, token);
+    await removeModule(moduleId);
   } catch (error) {
     console.log(error);
     return {
@@ -126,11 +116,8 @@ export async function updateModule(
     };
   }
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value as string;
-
   try {
-    await updateModuleReq(moduleId, token, result.data);
+    await editModule(moduleId, result.data);
   } catch (error) {
     console.log(error);
     return {

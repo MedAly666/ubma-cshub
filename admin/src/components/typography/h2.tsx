@@ -9,11 +9,11 @@ export default function TypographyH2({
   ...props
 }: TypographyH2Props) {
   return (
-    <h1
+    <h2
       className={clsx("text-3xl font-semibold tracking-tight", className)}
       {...props}
     >
       {children}
-    </h1>
+    </h2>
   );
 }

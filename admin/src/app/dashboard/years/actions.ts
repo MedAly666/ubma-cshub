@@ -1,7 +1,6 @@
 "use server";
 import { z } from "zod";
-import { cookies } from "next/headers";
-import { createYearReq, deleteYearReq, updateYearReq } from "@/services/years";
+import { addYear, removeYear, editYear } from "@/services/years";
 import { revalidatePath } from "next/cache";
 
 const createYearSchema = z.object({
@@ -34,10 +33,8 @@ export async function createYear(
     };
   }
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value as string;
   try {
-    await createYearReq(token, result.data);
+    await addYear(result.data);
   } catch (error) {
     console.log(error);
     return {
@@ -51,11 +48,8 @@ export async function createYear(
 }
 
 export async function deleteYear(yearId: string) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value as string;
-
   try {
-    await deleteYearReq(token, yearId);
+    await removeYear(yearId);
     revalidatePath("/dashboard/years");
     return { success: true, error: null };
   } catch (error) {
@@ -99,11 +93,8 @@ export async function updateYear(
       fieldErrors: transformedError,
     };
   }
-
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value as string;
   try {
-    await updateYearReq(token, yearId, transformedData);
+    await editYear(yearId, transformedData);
   } catch (error) {
     console.log(error);
     return {

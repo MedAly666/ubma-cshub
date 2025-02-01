@@ -1,7 +1,7 @@
 export interface CreateDegree {
-  name: "BACHELOR" | "MASTERS";
+  name: "MASTERS" | "BACHELOR";
 }
 
 export interface UpdateDegree {
-  name: "BACHELOR" | "MASTERS";
+  name?: "MASTERS" | "BACHELOR";
 }

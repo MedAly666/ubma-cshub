@@ -1,11 +1,7 @@
 "use server";
-import {
-  createAdminReq,
-  deleteAdminReq,
-  updateAdminReq,
-} from "@/services/admins";
+import { addAdmin } from "@/services/admins";
+import { editUser, removeUser } from "@/services/users";
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
 import { z } from "zod";
 
 interface CreateAdminState {
@@ -48,11 +44,8 @@ export async function createAdmin(
     };
   }
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value as string;
-
   try {
-    await createAdminReq(token, result.data);
+    await addAdmin(result.data);
   } catch (error) {
     console.log(error);
     return {
@@ -76,12 +69,8 @@ export async function deleteAdmin(
   data: FormData
 ) {
   const adminId = data.get("adminId")?.toString() as string;
-
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value as string;
-
   try {
-    await deleteAdminReq(adminId, token);
+    await removeUser(adminId);
   } catch (error) {
     console.log(error);
     return {
@@ -135,11 +124,8 @@ export async function updateAdmin(
     };
   }
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value as string;
-
   try {
-    await updateAdminReq(adminId, token, result.data);
+    await editUser(adminId, result.data);
   } catch (error) {
     console.log(error);
     return {

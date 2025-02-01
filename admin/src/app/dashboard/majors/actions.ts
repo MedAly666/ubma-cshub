@@ -1,11 +1,6 @@
 "use server";
-import {
-  createMajorReq,
-  deleteMajorReq,
-  updateMajorReq,
-} from "@/services/majors";
+import { addMajor, removeMajor, editMajor } from "@/services/majors";
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
 import { z } from "zod";
 
 interface CreateMajorState {
@@ -45,11 +40,8 @@ export async function createMajor(
     };
   }
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value as string;
-
   try {
-    await createMajorReq(token, transformedData);
+    await addMajor(transformedData);
   } catch (error) {
     console.log(error);
     return {
@@ -72,11 +64,9 @@ export async function deleteMajor(
   initialState: DeleteMajorState,
   data: FormData
 ) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value as string;
   const majorId = data.get("majorId")?.toString() as string;
   try {
-    await deleteMajorReq(token, majorId);
+    await removeMajor(majorId);
   } catch (error) {
     console.log(error);
     return {
@@ -126,11 +116,8 @@ export async function updateMajor(
     };
   }
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value as string;
-
   try {
-    await updateMajorReq(token, majorId, transformedData);
+    await editMajor(majorId, transformedData);
   } catch (error) {
     console.log(error);
     return {

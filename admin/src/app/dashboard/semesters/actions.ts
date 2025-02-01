@@ -1,11 +1,10 @@
 "use server";
 import {
-  createSemesterReq,
-  deleteSemesterReq,
-  updateSemesterReq,
+  addSemester,
+  removeSemester,
+  editSemester,
 } from "@/services/semesters";
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
 import { z } from "zod";
 
 interface CreateSemesterState {
@@ -38,11 +37,8 @@ export async function createSemester(
     };
   }
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value as string;
-
   try {
-    await createSemesterReq(token, transformedData);
+    await addSemester(transformedData);
   } catch (error) {
     console.log(error);
     return {
@@ -65,11 +61,9 @@ export async function deleteSemester(
   initialState: DeleteSemesterState,
   data: FormData
 ) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value as string;
   const semesterId = data.get("semesterId")?.toString() as string;
   try {
-    await deleteSemesterReq(token, semesterId);
+    await removeSemester(semesterId);
   } catch (error) {
     console.log(error);
     return {
@@ -113,11 +107,8 @@ export async function updateSemester(
     };
   }
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value as string;
-
   try {
-    await updateSemesterReq(token, semesterId, transformedData);
+    await editSemester(semesterId, transformedData);
   } catch (error) {
     console.log(error);
     return {

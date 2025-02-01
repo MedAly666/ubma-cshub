@@ -1,70 +1,33 @@
-import { CreateYear, UpdateYear } from "@/dtos/years";
-import { API_BASE } from "@/constants";
-import type {
-  GetYearsRes,
-  UpdateYearRes,
-  DeleteYearRes,
-  CreateYearRes,
-  ErrorRes,
-} from "@/types/services";
+import { CreateYear, UpdateYear } from "../dtos/years";
+import { prisma } from "@/utils/db";
 
-export async function createYearReq(token: string, data: CreateYear) {
-  const res = await fetch(`${API_BASE}/api/v1/years`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
+export const addYear = async (data: CreateYear) => {
+  const year = await prisma.year.create({ data: data });
+  return year;
+};
+
+export const findYearByID = async (id: string) => {
+  const year = await prisma.year.findUnique({
+    where: { id },
+    include: { major: true },
   });
-  if (!res.ok) {
-    const errData: ErrorRes = await res.json();
-    throw new Error(errData.message);
-  }
-  const resData: CreateYearRes = await res.json();
-  return resData.year;
-}
+  return year;
+};
 
-export async function getYears() {
-  const res = await fetch(`${API_BASE}/api/v1/years`);
-  if (!res.ok) {
-    const errData: ErrorRes = await res.json();
-    throw new Error(errData.message);
-  }
-  const resData: GetYearsRes = await res.json();
-  return resData.years;
-}
-
-export async function deleteYearReq(token: string, id: string) {
-  const res = await fetch(`${API_BASE}/api/v1/years/${id}`, {
-    method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` },
+export const findYears = async () => {
+  const years = await prisma.year.findMany({
+    include: { major: { include: { degree: true } } },
+    orderBy: { createdAt: "desc" },
   });
-  if (!res.ok) {
-    const errData: ErrorRes = await res.json();
-    throw new Error(errData.message);
-  }
-  const resData: DeleteYearRes = await res.json();
-  return resData.deletedYear;
-}
+  return years;
+};
 
-export async function updateYearReq(
-  token: string,
-  id: string,
-  data: UpdateYear
-) {
-  const res = await fetch(`${API_BASE}/api/v1/years/${id}`, {
-    method: "PUT",
-    body: JSON.stringify(data),
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
-  if (!res.ok) {
-    const errData: ErrorRes = await res.json();
-    throw new Error(errData.message);
-  }
-  const resData: UpdateYearRes = await res.json();
-  return resData.year;
-}
+export const removeYear = async (id: string) => {
+  const deletedYear = await prisma.year.delete({ where: { id } });
+  return deletedYear;
+};
+
+export const editYear = async (id: string, data: UpdateYear) => {
+  const year = await prisma.year.update({ where: { id }, data });
+  return year;
+};

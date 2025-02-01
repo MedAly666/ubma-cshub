@@ -1,11 +1,7 @@
-export type User = {
-  id: string;
-  username: string;
-  email: string;
-  createdAt: Date;
-  updatedAt: Date;
-  role: "ADMIN" | "SUPERUSER";
-};
+import { User as PrismaUser } from "@prisma/client";
+import { Major as PrismaMajor } from "@prisma/client";
+
+export type User = Omit<PrismaUser, "password">;
 
 export type Degree = {
   id: string;
@@ -43,13 +39,17 @@ export type Module = {
   updatedAt: Date;
 };
 
-export type Major = {
-  id: string;
-  name: string;
-  description: string;
-  code: string;
-  degreeId: string;
+export type Major = PrismaMajor & {
   degree: Degree;
+};
+
+export type Resource = {
+  id: string;
+  resourceType: "BOOK" | "DRIVE" | "YOUTUBE" | "WEBSITE";
+  url: string;
+  description: string;
+  module: Module;
+  moduleId: string;
   createdAt: Date;
   updatedAt: Date;
 };

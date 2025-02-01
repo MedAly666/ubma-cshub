@@ -1,70 +1,27 @@
-import { CreateDegree, UpdateDegree } from "@/dtos/degrees";
-import { API_BASE } from "@/constants";
-import type {
-  GetDegreesRes,
-  CreateDegreeRes,
-  UpdateDegreeRes,
-  DeleteDegreeRes,
-  ErrorRes,
-} from "@/types/services";
+import { CreateDegree, UpdateDegree } from "../dtos/degrees";
+import { prisma } from "@/utils/db";
 
-export async function getDegrees() {
-  const res = await fetch(`${API_BASE}/api/v1/degrees`);
-  if (!res.ok) {
-    const errData: ErrorRes = await res.json();
-    throw new Error(errData.message);
-  }
-  const resData: GetDegreesRes = await res.json();
-  return resData.degrees;
-}
+export const addDegree = (degreeInfo: CreateDegree) => {
+  const degree = prisma.degree.create({ data: degreeInfo });
+  return degree;
+};
 
-export async function createDegreeReq(token: string, data: CreateDegree) {
-  const res = await fetch(`${API_BASE}/api/v1/degrees`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) {
-    const errData: ErrorRes = await res.json();
-    throw new Error(errData.message);
-  }
-  const resData: CreateDegreeRes = await res.json();
-  return resData.degree;
-}
+export const findDegreeByID = (id: string) => {
+  const degree = prisma.degree.findUnique({ where: { id } });
+  return degree;
+};
 
-export async function deleteDegreeReq(token: string, degreeId: string) {
-  const res = await fetch(`${API_BASE}/api/v1/degrees/${degreeId}`, {
-    method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (!res.ok) {
-    const errData: ErrorRes = await res.json();
-    throw new Error(errData.message);
-  }
-  const resData: DeleteDegreeRes = await res.json();
-  return resData.deletedDegree;
-}
+export const findDegrees = () => {
+  const degrees = prisma.degree.findMany();
+  return degrees;
+};
 
-export async function updateDegreeReq(
-  token: string,
-  degreeId: string,
-  data: UpdateDegree
-) {
-  const res = await fetch(`${API_BASE}/api/v1/degrees/${degreeId}`, {
-    method: "PUT",
-    body: JSON.stringify(data),
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
-  if (!res.ok) {
-    const errData: ErrorRes = await res.json();
-    throw new Error(errData.message);
-  }
-  const resData: UpdateDegreeRes = await res.json();
-  return resData.degree;
-}
+export const removeDegree = (id: string) => {
+  const deletedDegree = prisma.degree.delete({ where: { id } });
+  return deletedDegree;
+};
+
+export const editDegree = (id: string, degreeInfo: UpdateDegree) => {
+  const degrees = prisma.degree.update({ where: { id }, data: degreeInfo });
+  return degrees;
+};

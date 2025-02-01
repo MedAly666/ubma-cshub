@@ -48,7 +48,9 @@ function DesktopNav() {
       </nav>
       <div className="hidden gap-5 md:flex md:items-center">
         <DarkMode />
-        <Button variant={"outline"}>Contribute</Button>
+        <Button variant={"outline"} className="font-semibold">
+          Contribute
+        </Button>
       </div>
     </>
   );
@@ -61,7 +63,9 @@ interface MobileNavProps {
 function MobileNav({ navOpen, setNavOpen }: MobileNavProps) {
   return (
     <div
-      className={`absolute left-0 top-0 h-[100vh] w-full overflow-x-hidden bg-transparent ${navOpen ? "" : "pointer-events-none opacity-0"} transition-opacity`}
+      className={`absolute left-0 top-0 h-[100vh] w-full overflow-x-hidden bg-transparent ${
+        navOpen ? "" : "pointer-events-none opacity-0"
+      } transition-opacity`}
     >
       <div
         className={`absolute left-0 top-0 h-screen w-full cursor-pointer bg-black opacity-20 dark:bg-white md:hidden ${

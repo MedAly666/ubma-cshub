@@ -1,18 +1,18 @@
 import TypographyH3 from "@/components/typography/h3";
 import CreateModuleDialog from "./components/create-dialog";
-import { getModules } from "@/services/modules";
-import { getYears } from "@/services/years";
-import { getDegrees } from "@/services/degrees";
-import { getSemesters } from "@/services/semesters";
-import { getMajors } from "@/services/majors";
+import { findModules } from "@/services/modules";
+import { findYears } from "@/services/years";
+import { findDegrees } from "@/services/degrees";
+import { findSemesters } from "@/services/semesters";
+import { findMajors } from "@/services/majors";
 import ModulesTable from "./components/modules-table";
 
 export default async function Modules() {
-  const modulesReq = getModules();
-  const yearsReq = getYears();
-  const degreesReq = getDegrees();
-  const semestersReq = getSemesters();
-  const majorsReq = getMajors();
+  const modulesReq = findModules();
+  const yearsReq = findYears();
+  const degreesReq = findDegrees();
+  const semestersReq = findSemesters();
+  const majorsReq = findMajors();
 
   const [modules, years, degrees, semesters, majors] = await Promise.all([
     modulesReq,
