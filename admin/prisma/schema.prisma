@@ -30,16 +30,11 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
-enum DegreeType {
-  BACHELOR
-  MASTERS
-}
-
 model Degree {
-  id        String     @id @default(uuid())
-  name      DegreeType
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   Major     Major[]
 }
 

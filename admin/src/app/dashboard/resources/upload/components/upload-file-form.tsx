@@ -14,12 +14,9 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 
 export default function UploadFileForm() {
-  const [state, uploadToDriveAction, isPending] = useActionState(
-    uploadToDrive,
-    {
-      success: false,
-    }
-  );
+  const [, uploadToDriveAction, isPending] = useActionState(uploadToDrive, {
+    success: false,
+  });
   const [progress, setProgress] = useState(0);
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;

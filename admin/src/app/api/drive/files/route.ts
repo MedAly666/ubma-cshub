@@ -23,6 +23,7 @@ export async function GET() {
     });
     return NextResponse.json(response.data.files);
   } catch (error) {
+    console.log(error);
     return new NextResponse("Failed to fetch files", { status: 500 });
   }
 }
@@ -45,8 +46,7 @@ export async function DELETE(req: NextRequest) {
     await drive.files.delete({ fileId: id });
     return NextResponse.json({ status: "success" });
   } catch (error) {
+    console.log(error);
     return new NextResponse("Failed to fetch files", { status: 500 });
   }
 }
-
-export async function POST(req: NextRequest) {}

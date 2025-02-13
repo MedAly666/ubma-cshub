@@ -12,7 +12,7 @@ export const findDegreeByID = (id: string) => {
 };
 
 export const findDegrees = () => {
-  const degrees = prisma.degree.findMany();
+  const degrees = prisma.degree.findMany({});
   return degrees;
 };
 

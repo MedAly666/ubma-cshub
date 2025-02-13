@@ -23,14 +23,21 @@ export default function FilesList() {
   async function getFiles() {
     const res = await fetch("/api/drive/files");
     const data = await res.json();
-    const transformedData: IFile[] = data.map((item) => {
-      return {
-        id: item.id,
-        name: item.name,
-        type: parseType(item.mimeType),
-        link: item.webViewLink,
-      };
-    });
+    const transformedData: IFile[] = data.map(
+      (item: {
+        id: string;
+        name: string;
+        mimeType: string;
+        webViewLink: string;
+      }) => {
+        return {
+          id: item.id,
+          name: item.name,
+          type: parseType(item.mimeType),
+          link: item.webViewLink,
+        };
+      }
+    );
     return transformedData;
   }
 

@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { google } from "googleapis";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session?.accessToken) {
     return new NextResponse("Unauthorized", { status: 401 });
@@ -29,6 +29,7 @@ export async function GET(req: NextRequest) {
     };
     return NextResponse.json(data);
   } catch (error) {
+    console.log(error);
     return new NextResponse("Failed to get storage information", {
       status: 500,
     });

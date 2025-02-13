@@ -11,11 +11,11 @@ interface ResourcesTableProps {
   majors: Major[];
 }
 export default function ResourcesTable({
-  modules,
+  /*   modules,
   years,
   degrees,
   semesters,
-  majors,
+  majors, */
   resources,
 }: ResourcesTableProps) {
   const columns = [

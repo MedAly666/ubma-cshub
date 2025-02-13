@@ -1,4 +1,4 @@
-"use client";
+/* "use client";
 import { Degree, Major, Module, Resource, Semester, Year } from "@/types/db";
 import { useState } from "react";
 import {
@@ -72,3 +72,4 @@ export default function ActionsMenu({
     </>
   );
 }
+ */

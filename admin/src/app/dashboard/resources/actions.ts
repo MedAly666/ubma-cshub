@@ -57,8 +57,8 @@ export async function createResource(
   };
 }
 
-interface DeleteResourceState {
+/* interface DeleteResourceState {
   success: boolean;
   serverErrors?: string;
 }
-export async function deleteResource() {}
+export async function deleteResource() {} */

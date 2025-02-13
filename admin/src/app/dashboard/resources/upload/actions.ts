@@ -2,7 +2,7 @@
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { google } from "googleapis";
-import { PassThrough, Readable } from "stream";
+import { Readable } from "stream";
 
 interface UploadToDriveState {
   error?: string;
@@ -43,6 +43,7 @@ export async function uploadToDrive(
 
     return { success: true };
   } catch (error) {
+    console.log(error);
     return {
       success: false,
       message: "Failed to Upload file",

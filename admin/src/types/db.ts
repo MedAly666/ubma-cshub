@@ -5,7 +5,7 @@ export type User = Omit<PrismaUser, "password">;
 
 export type Degree = {
   id: string;
-  name: "BACHELOR" | "MASTERS";
+  name: string;
   createdAt: Date;
   updatedAt: Date;
 };

@@ -1,4 +1,10 @@
-import NextAuth, { AuthOptions, SessionStrategy } from "next-auth";
+import NextAuth, {
+  AuthOptions,
+  Session,
+  Account,
+  SessionStrategy,
+} from "next-auth";
+import { JWT } from "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: AuthOptions = {
@@ -25,17 +31,19 @@ export const authOptions: AuthOptions = {
     strategy: "jwt" as SessionStrategy,
   },
   callbacks: {
-    async jwt({ token, account }: { token: any; account: any }) {
+    async jwt({ token, account }: { token: JWT; account?: Account | null }) {
       if (account) {
-        token.accessToken = account.access_token;
-        token.refreshToken = account.refresh_token;
+        token.accessToken = account.access_token!;
+        token.refreshToken = account.refresh_token!;
       }
       return token;
     },
-    async session({ session, token }: { session: any; token: any }) {
-      session.accessToken = token.accessToken;
-      session.refreshToken = token.refreshToken;
-      return session;
+    async session({ session, token }: { session: Session; token: JWT }) {
+      return {
+        ...session,
+        accessToken: token.accessToken,
+        refreshToken: token.refreshToken,
+      };
     },
   },
 };

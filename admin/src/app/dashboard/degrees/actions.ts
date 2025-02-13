@@ -38,7 +38,7 @@ interface UpdateDegreeState {
   };
 }
 const updateDegreeSchema = z.object({
-  name: z.enum(["MASTERS", "BACHELOR"]),
+  name: z.string().nonempty(),
 });
 export async function updateDegree(
   intialState: UpdateDegreeState,
@@ -83,7 +83,7 @@ interface CreateDegreeState {
   };
 }
 const createDegreeSchema = z.object({
-  name: z.enum(["BACHELOR", "MASTERS"]),
+  name: z.string().nonempty(),
 });
 
 export async function createDegree(
