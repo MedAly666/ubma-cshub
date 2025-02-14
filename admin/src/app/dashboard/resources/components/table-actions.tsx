@@ -1,4 +1,4 @@
-/* "use client";
+"use client";
 import { Degree, Major, Module, Resource, Semester, Year } from "@/types/db";
 import { useState } from "react";
 import {
@@ -11,18 +11,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
-import { DeleteModuleDialog } from "./delete-dialog";
-import UpdateModuleDialog from "./update-dialog";
+import DeleteResourceDialog from "./delete-dialog";
+import UpdateResourceDialog from "./update-dialog";
 
 interface ActionsMenuProps {
-  module: Module[];
+  modules: Module[];
   degrees: Degree[];
   years: Year[];
   semesters: Semester[];
   majors: Major[];
   resource: Resource;
 }
-export default function ActionsMenu({
+export default function TableActions({
   modules,
   degrees,
   years,
@@ -53,13 +53,13 @@ export default function ActionsMenu({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <DeleteModuleDialog
+      <DeleteResourceDialog
         resource={resource}
         setIsDeleteDialogOpen={setIsDeleteDialogOpen}
         isDeleteDialogOpen={isDeleteDialogOpen}
       />
 
-      <UpdateModuleDialog
+      <UpdateResourceDialog
         years={years}
         degrees={degrees}
         semesters={semesters}
@@ -72,4 +72,3 @@ export default function ActionsMenu({
     </>
   );
 }
- */

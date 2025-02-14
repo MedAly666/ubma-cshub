@@ -1,6 +1,7 @@
 import { Degree, Major, Module, Resource, Semester, Year } from "@/types/db";
 import DynamicTable from "@/components/table/dynamic-table";
 import { parseDate } from "@/utils/date";
+import TableActions from "./table-actions";
 
 interface ResourcesTableProps {
   resources: Resource[];
@@ -11,11 +12,11 @@ interface ResourcesTableProps {
   majors: Major[];
 }
 export default function ResourcesTable({
-  /*   modules,
+  modules,
   years,
   degrees,
   semesters,
-  majors, */
+  majors,
   resources,
 }: ResourcesTableProps) {
   const columns = [
@@ -27,10 +28,6 @@ export default function ResourcesTable({
       header: "Type",
       accessor: (resource: Resource) => resource.resourceType,
     },
-    /*  {
-      header: "URL",
-      accessor: (resource: Resource) => resource.url,
-    }, */
     {
       header: "Description",
       accessor: (resource: Resource) => resource.description,
@@ -45,18 +42,19 @@ export default function ResourcesTable({
       accessor: (resource: Resource) =>
         parseDate(resource.updatedAt.toString()),
     },
-    /* {
+    {
       header: "Actions",
-      accessor: (module: Module) => (
+      accessor: (resource: Resource) => (
         <TableActions
-          module={module}
+          resource={resource}
           degrees={degrees}
           majors={majors}
           years={years}
           semesters={semesters}
+          modules={modules}
         />
       ),
-    }, */
+    },
   ];
 
   return <DynamicTable data={resources} columns={columns} />;

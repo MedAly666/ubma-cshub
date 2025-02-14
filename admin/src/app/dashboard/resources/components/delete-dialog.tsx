@@ -1,4 +1,4 @@
-/* import { Dispatch, SetStateAction, useActionState, useEffect } from "react";
+import { Dispatch, SetStateAction, useActionState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Resource } from "@/types/db";
+import { Resource } from "@prisma/client";
+import { deleteResource } from "../actions";
 
 interface DeleteResourceDialogProps {
   isDeleteDialogOpen: boolean;
@@ -18,14 +19,17 @@ interface DeleteResourceDialogProps {
   resource: Resource;
 }
 
-export function DeleteResourceDialog({
+export default function DeleteResourceDialog({
   isDeleteDialogOpen,
   setIsDeleteDialogOpen,
   resource,
 }: DeleteResourceDialogProps) {
-  const [state, deleteModuleAction, isPending] = useActionState(deleteModule, {
-    success: false,
-  });
+  const [state, deleteModuleAction, isPending] = useActionState(
+    deleteResource,
+    {
+      success: false,
+    }
+  );
 
   useEffect(() => {
     if (state.success) setIsDeleteDialogOpen(false);
@@ -77,4 +81,3 @@ export function DeleteResourceDialog({
     </Dialog>
   );
 }
- */
