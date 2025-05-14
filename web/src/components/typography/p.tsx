@@ -10,7 +10,7 @@ export function TypographyP({
   ...props
 }: TypographyPProps) {
   return (
-    <p className={clsx("leading-7", className)} {...props}>
+    <p className={clsx("text-base lg:text-sm", className)} {...props}>
       {children}
     </p>
   );
