@@ -5,13 +5,14 @@ import { AlignRight, X } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import Link from "next/link";
 import DarkMode from "./dark-mode";
+import { TypographyP } from "@/components/typography/p";
 
 export default function Navbar() {
   const [navOpen, setNavOpen] = useState(false);
   return (
     <div className="sticky top-0 h-16 w-full border-b bg-transparent backdrop-blur-lg">
       <div className="container mx-auto flex h-full items-center justify-between px-8">
-        <Link href={"/home"} className="">
+        <Link href={"/"} className="">
           <TypographyH1>Ubma-Cshub</TypographyH1>
         </Link>
         <DesktopNav />
@@ -33,17 +34,17 @@ function DesktopNav() {
   return (
     <>
       <nav className="hidden text-gray-600 dark:text-white md:flex md:items-center md:gap-4">
-        <Link href="/home" className="hover:underline">
-          Home
+        <Link href="/" className="hover:underline">
+          <TypographyP>Home</TypographyP>
         </Link>
         <Link href="/courses" className="hover:underline">
-          Courses
+          <TypographyP>Courses</TypographyP>
         </Link>
         <Link href="/about" className="hover:underline">
-          About
+          <TypographyP>About</TypographyP>
         </Link>
         <Link href="/contact" className="hover:underline">
-          Contact
+          <TypographyP>Contact</TypographyP>
         </Link>
       </nav>
       <div className="hidden gap-5 md:flex md:items-center">
@@ -63,7 +64,7 @@ interface MobileNavProps {
 function MobileNav({ navOpen, setNavOpen }: MobileNavProps) {
   return (
     <div
-      className={`absolute left-0 top-0 h-[100vh] w-full overflow-x-hidden bg-transparent ${
+      className={`absolute left-0 top-0 h-screen w-full overflow-x-hidden bg-transparent ${
         navOpen ? "" : "pointer-events-none opacity-0"
       } transition-opacity`}
     >
