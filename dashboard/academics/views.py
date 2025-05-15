@@ -8,6 +8,8 @@ from .serializers import (
     ModuleSerializer,
     ResourceSerializer,
 )
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 
 class DegreeViewSet(viewsets.ModelViewSet):
@@ -33,6 +35,12 @@ class SemesterViewSet(viewsets.ModelViewSet):
 class ModuleViewSet(viewsets.ModelViewSet):
     queryset = Module.objects.all()
     serializer_class = ModuleSerializer
+
+    @action(detail=False, methods=["get"], url_path="by-semester/(?P<semester>[^/.]+)")
+    def by_semester(self, request, semester=None):
+        modules = self.queryset.filter(semester=semester)
+        serializer = self.get_serializer(modules, many=True)
+        return Response(serializer.data)
 
 
 class ResourceViewSet(viewsets.ModelViewSet):
