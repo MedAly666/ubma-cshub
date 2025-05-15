@@ -1,3 +1,4 @@
+import axiosClient from ".";
 import { CreateYear, UpdateYear } from "../dtos/years";
 import { prisma } from "@/utils/db";
 
@@ -14,12 +15,9 @@ export const findYearByID = async (id: string) => {
   return year;
 };
 
-export const findYears = async () => {
-  const years = await prisma.year.findMany({
-    include: { major: { include: { degree: true } } },
-    orderBy: { createdAt: "desc" },
-  });
-  return years;
+export const getAllYears = async () => {
+  const response = await axiosClient.get("/academics/api/years");
+  return response.data;
 };
 
 export const removeYear = async (id: string) => {

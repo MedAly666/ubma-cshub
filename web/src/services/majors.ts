@@ -1,3 +1,4 @@
+import axiosClient from ".";
 import { CreateMajor, UpdateMajor } from "../dtos/majors";
 import { prisma } from "@/utils/db";
 
@@ -11,11 +12,9 @@ export const findMajorByID = (id: string) => {
   return major;
 };
 
-export const findMajors = () => {
-  const majors = prisma.major.findMany({
-    include: { degree: true },
-  });
-  return majors;
+export const getAllMajors = async () => {
+  const response = await axiosClient.get("/academics/api/majors");
+  return response.data;
 };
 
 export const removeMajor = (id: string) => {
