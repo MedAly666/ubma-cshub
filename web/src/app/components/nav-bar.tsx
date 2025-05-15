@@ -64,7 +64,7 @@ interface MobileNavProps {
 function MobileNav({ navOpen, setNavOpen }: MobileNavProps) {
   return (
     <div
-      className={`absolute left-0 top-0 h-[100vh] w-full overflow-x-hidden bg-transparent ${
+      className={`absolute left-0 top-0 h-screen w-full overflow-x-hidden bg-transparent ${
         navOpen ? "" : "pointer-events-none opacity-0"
       } transition-opacity`}
     >

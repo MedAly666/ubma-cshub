@@ -54,13 +54,13 @@ interface FeatureCardProps {
 function FeatureCard({ feature }: FeatureCardProps) {
   return (
     <Card className="w-72 flex flex-col h-full">
-      <CardHeader className="flex-shrink-0">
+      <CardHeader className="shrink-0">
         <CardTitle className="mb-1">{feature.icon}</CardTitle>
         <CardTitle>
           <TypographyH2>{feature.title}</TypographyH2>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-grow">
+      <CardContent className="grow">
         <p>{feature.content}</p>
       </CardContent>
     </Card>
