@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export default async function Modules({ params }: { params: { semesterId: string } }) {
+export default async function Modules({ params }) {
   const { semesterId } = params;
   const modules = await getModulesBySemester(semesterId);
 
